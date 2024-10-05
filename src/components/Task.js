@@ -4,13 +4,12 @@ class Task extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isCompleted: this.props.info.isCompleted || false, // Получаем статус выполнения из props
+            isCompleted: this.props.info.isCompleted || false,
             editForm: false,
             task: this.props.info.task
         };
     }
 
-    // Сохраняем изменения в localStorage
     saveToLocalStorage = (updatedTask) => {
         const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
         const updatedTasks = storedTasks.map((task) =>
@@ -20,15 +19,14 @@ class Task extends React.Component {
     };
 
     handleComplete = () => {
-        const updatedTask = { ...this.props.info, isCompleted: true }; // Обновляем статус задачи
+        const updatedTask = { ...this.props.info, isCompleted: true };
         this.setState({
             isCompleted: true,
             editForm: false
         });
 
-        // Сохраняем выполненную задачу в localStorage
         this.saveToLocalStorage(updatedTask);
-        this.props.onEdit(updatedTask); // Передаем обновленную задачу в родительский компонент
+        this.props.onEdit(updatedTask);
     };
 
     handleChange = (e) => {
@@ -47,7 +45,6 @@ class Task extends React.Component {
         const updatedTask = { ...this.props.info, task };
         this.props.onEdit(updatedTask);
 
-        // Сохраняем обновленную задачу в localStorage
         this.saveToLocalStorage(updatedTask);
 
         this.setState({ editForm: false });
