@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Montserrat", system-ui;
+    background-color: #333;
+}
+
+button{
+    cursor: pointer;
+}
+
+button:disabled{
+    cursor: auto;
+} 
+
+.header{
+    height: 100px;
+    background-color: #222;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title{
+    font-weight: 900;
+    font-size: 50px;
+}
+
+.task-wrapper{
+    width: 60%;
+    background-color: aquamarine;
+    padding: 25px 75px;
+    color: #000;
+    margin-left: 25px;
+    margin-top: 15px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    float: left;
+}
+
+.task-text{
+    font-weight: 500;
+    font-size: 25px;
+    width: 100%;
+    overflow-wrap: break-word;
+}
+
+.buttons-wrapper{
+    display: flex;
+    gap: 15px;
+}
+
+.button{
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: azure;
+    color: #000;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+form{
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+form input{
+    width: 90%;
+    padding: 15px 5%;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    background: #222;
+    color: #fff;
+    outline: none;
+    font-size: 15px;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+  }
