@@ -1,72 +1,76 @@
-import React from "react"
-import Header from './components/Header'
-import Tasks from "./components/Tasks"
-import AddTask from "./components/AddTask"
+import React from "react";
+import Header from './components/Header';
+import Tasks from "./components/Tasks";
+import AddTask from "./components/AddTask";
 
 class App extends React.Component {
-
-    constructor(props){
-        super(props)
+    constructor(props) {
+        super(props);
 
         const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
         this.state = {
-            info: savedTasks, // Используем сохраненные данные
+            tasks: savedTasks,
+            taskToEdit: null
         };
-
-        this.addTask = this.addTask.bind(this)
-        this.deleteTask = this.deleteTask.bind(this)
-        this.editTask = this.editTask.bind(this)
     }
 
     saveTasksToLocalStorage = (tasks) => {
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
-    addTask(task) {
-    const id = this.state.info.length + 1;
-    const newTasks = [...this.state.info, { id, ...task }];
-    
-    this.setState({ info: newTasks }, () => {
-        this.saveTasksToLocalStorage(this.state.info); // Сохранение в localStorage
-    });
-    }
-      
-    deleteTask(id) {
-    const isConfirmed = window.confirm("Вы уверены, что хотите удалить эту задачу?");
-    
-    if (isConfirmed) {
-        const newTasks = this.state.info.filter((el) => el.id !== id);
-        
-        this.setState({ info: newTasks }, () => {
-        this.saveTasksToLocalStorage(this.state.info); // Сохранение в localStorage
-        });
-    }
+    addOrEditTask = (newTask) => {
+        const tasks = [...this.state.tasks];
+
+        if (newTask.id) {
+            const existingTaskIndex = tasks.findIndex(task => task.id === newTask.id);
+            tasks[existingTaskIndex] = newTask;
+        } else {
+            newTask.id = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+            tasks.push(newTask);
+        }
+
+        this.setState({ tasks, taskToEdit: null }, () => this.saveTasksToLocalStorage(this.state.tasks));
     }
 
-    editTask(task) {
-    const allTasks = this.state.info.map((el) => (el.id === task.id ? task : el));
-
-    this.setState({ info: allTasks }, () => {
-        this.saveTasksToLocalStorage(this.state.info); // Сохранение в localStorage
-    });
+    deleteTask = (id) => {
+        const confirmed = window.confirm('Вы уверены, что хотите удалить эту задачу?');
+        if (confirmed) {
+            const tasks = this.state.tasks.filter(task => task.id !== id);
+            this.setState({ tasks }, () => this.saveTasksToLocalStorage(this.state.tasks));
+        }
     }
 
-    
+    editTask = (task) => {
+        this.setState({ taskToEdit: task });
+    }
+
+    completeTask = (id) => {
+        const tasks = this.state.tasks.map(task =>
+            task.id === id ? { ...task, isCompleted: true } : task
+        );
+
+        this.setState({ tasks, taskToEdit: null }, () => this.saveTasksToLocalStorage(this.state.tasks));
+    }
+
     render() {
         return (
             <div>
                 <Header />
-                <main>
-                    <Tasks info = {this.state.info} onDelete = {this.deleteTask} onEdit = {this.editTask}/>
-                </main>
+                <main className = "main">
+                    <Tasks
+                        tasks={this.state.tasks}
+                        onDelete={this.deleteTask}
+                        onEdit={this.editTask}
+                        onComplete={this.completeTask}
+                    />
+                
                 <aside>
-                    <AddTask onAdd = {this.addTask} task={this.state.editingTask} onSave={this.saveTask}/>  
+                    <AddTask onAdd={this.addOrEditTask} taskToEdit={this.state.taskToEdit} />
                 </aside>
+                </main>
             </div>
-        )
+        );
     }
-
 }
 
-export default App
+export default App;

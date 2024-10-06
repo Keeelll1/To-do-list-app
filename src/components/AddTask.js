@@ -1,51 +1,47 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-class AddTask extends React.Component {
+const AddTask = ({ onAdd, taskToEdit }) => {
+    const [task, setTask] = useState('');
 
-    taskAdd= {}
+    useEffect(() => {
+        if (taskToEdit) {
+            setTask(taskToEdit.task);
+        } else {
+            setTask('');
+        }
+    }, [taskToEdit]);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      task: ""
-    };
-  }
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (this.state.task.trim() === '') {
-      alert('Поле обязательно для заполнения!');
-      return;
+        if (task.trim() === '') {
+            alert('Поле обязательно для заполнения!');
+            return;
+        }
+
+        const newTask = {
+            task: task,
+            isCompleted: taskToEdit ? taskToEdit.isCompleted : false,
+            id: taskToEdit ? taskToEdit.id : undefined,
+        };
+
+        onAdd(newTask);
+        setTask('');
     }
 
-    this.props.onAdd(
-      this.taskAdd
-    );
-
-    this.setState({ task: '' });
-  }
-
-  render() {
     return (
-      <form ref={(el) => { this.myForm = el }} onSubmit={this.handleSubmit}>
-        <input
-          placeholder="Введите задачу!"
-          value={this.state.task}
-          onChange={(e) => this.setState({task: e.target.value})}
-          required
-        />
-        <button type="submit" className="button" onClick = {() => {
-            this.taskAdd = {
-                task: this.state.task
-            }
-            if(this.props.info){
-                this.taskAdd.id = this.props.info.id
-            }
-        }}>Добавить</button>
-      </form>
+        <form onSubmit={handleSubmit}>
+            <input
+                type="text"
+                placeholder="Введите задачу!"
+                value={task}
+                onChange={(e) => setTask(e.target.value)}
+            />
+            <div className = "btn-wrapper">
+            <button className = "button" type="submit">{taskToEdit ? 'Сохранить изменения' : 'Добавить'}</button>
+            </div>
+        </form>
     );
-  }
 }
 
 export default AddTask;

@@ -1,24 +1,32 @@
-import React from "react"
-import Task from "./Task"
+import React from "react";
+import Task from "./Task";
 
 class Tasks extends React.Component {
-
     render() {
-        if(this.props.info.length > 0)
-            return(
+        const { tasks, onDelete, onEdit, onComplete } = this.props;
+
+        if (tasks && tasks.length > 0) {
+            return (
                 <div>
-                    {this.props.info.map((el) => (
-                        <Task onEdit = {this.props.onEdit} onDelete = {this.props.onDelete} key = {el.id} info = {el}/>
+                    {tasks.map((el) => (
+                        <Task 
+                            onEdit={onEdit} 
+                            onDelete={onDelete} 
+                            onComplete={onComplete} 
+                            key={el.id} 
+                            info={el} 
+                        />
                     ))}
                 </div>
-            )
-        else
-            return(
-                <div className = "task-wrapper">
-                    <p className = "task-text">Добавьте задачу!</p>
+            );
+        } else {
+            return (
+                <div className="task-wrapper">
+                    <p className="task-text">Добавьте задачу!</p>
                 </div>
-            )
+            );
+        }
     }
 }
 
-export default Tasks
+export default Tasks;
